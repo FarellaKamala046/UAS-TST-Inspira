@@ -6,16 +6,16 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// 1. HALAMAN UTAMA (Hanya untuk cek web jalan)
+// 1. HALAMAN UTAMA
 $routes->get('/', 'Home::index');
 
-// 2. DATABASE SETUP (Akses via browser: /database/init & /database/seed)
+// 2. DATABASE SETUP
 $routes->group('database', function($routes) {
     $routes->get('init', 'Setup::index'); 
     $routes->get('seed', 'Setup::seed');  
 });
 
-// 3. API ENDPOINTS (Semua komunikasi data lewat sini)
+// 3. API ENDPOINTS
 $routes->group('api', function($routes) {
     
     // --- AUTHENTICATION ---
@@ -24,14 +24,13 @@ $routes->group('api', function($routes) {
 
     // --- LOOKS (OOTD) - Public ---
     $routes->get('looks', 'ApiController::getAllLooks');
-    $routes->get('looks/search', 'ApiController::searchLooks'); // Harus di atas (:num) agar tidak dianggap ID
+    $routes->get('looks/search', 'ApiController::searchLooks'); 
     $routes->get('looks/(:num)', 'ApiController::getLookDetail/$1'); 
 
     // --- USERS (Profiles) - Public ---
     $routes->get('users/(:any)', 'ApiController::getUserProfile/$1');
 
     // --- BOARDS (Interaction) - Protected (Wajib Login) ---
-    // Sementara kita biarkan begini, nanti kita pasang filter 'auth' di sini
-    $routes->post('boards/(:num)/looks', 'BoardController::addLook/$1');
-    $routes->post('api/boards/(:num)/looks', 'BoardController::addLook/$1', ['filter' => 'auth']);
+    // Sekarang hanya ada SATU rute dan sudah ditempel filter 'auth'
+    $routes->post('boards/(:num)/looks', 'BoardController::addLook/$1', ['filter' => 'auth']);
 });
