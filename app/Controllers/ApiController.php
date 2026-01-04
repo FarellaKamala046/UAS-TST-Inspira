@@ -12,9 +12,14 @@ class ApiController extends Controller
         $db = \Config\Database::connect();
         $pins = $db->table('pins')->get()->getResultArray();
 
-        // Mengubah string JSON item_details menjadi array asli sebelum dikirim
         foreach ($pins as &$pin) {
-            $pin['item_details'] = json_decode($pin['item_details']);
+        // PENGAMAN: Cek dulu apakah key 'item_details' ada di kolom database
+            if (isset($pin['item_details'])) {
+                $pin['item_details'] = json_decode($pin['item_details']);
+            } else {
+            // Jika tidak ada, kasih array kosong agar tidak error
+                $pin['item_details'] = []; 
+            }
         }
 
         return $this->response->setJSON([
