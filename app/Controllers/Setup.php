@@ -29,7 +29,17 @@ class Setup extends Controller
             shopee_link TEXT,
             visibility TEXT DEFAULT "public"
         )');
-
+        // Tambahkan baris ini di dalam fungsi index() Setup.php
+        $db->query('CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE,
+            email TEXT UNIQUE,
+            password TEXT,
+            token TEXT, -- Kode rahasia login disimpan di sini
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )');
+        
+         
         return "✅ Database di-reset! Struktur item_details dengan multiple tags sudah siap.";
     }
 
