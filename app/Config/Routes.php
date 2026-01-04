@@ -5,24 +5,32 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+// 1. HALAMAN UTAMA
 $routes->get('/', 'Home::index');
 
-// Setup Routes
-$routes->get('setup', 'Setup::index');
-$routes->get('setup/seed', 'Setup::seed');
+// 2. DATABASE SETUP (Akses ini sekali saja di awal)
+$routes->group('database', function($routes) {
+    $routes->get('init', 'Setup::index'); // URL: /database/init
+    $routes->get('seed', 'Setup::seed');  // URL: /database/seed
+});
 
-// Boards Routes (Tempat kumpulan Looks)
+// 3. FITUR BOARDS (Koleksi)
 $routes->get('boards', 'BoardController::index');
 $routes->post('boards', 'BoardController::create');
-$routes->get('boards/(:num)', 'BoardController::show/$1');
 $routes->get('boards/search', 'BoardController::searchBoards');
+$routes->get('boards/(:num)', 'BoardController::show/$1');
 
-// Looks Routes (Dulu Pins)
-$routes->get('looks/search', 'BoardController::searchLooks'); // Ganti searchPins jadi searchLooks
-$routes->post('boards/(:num)/looks', 'BoardController::addLook/$1'); // Ganti addPin jadi addLook
+// 4. FITUR LOOKS (OOTD)
+$routes->get('looks/search', 'BoardController::searchLooks');
 
-// API Routes
+// 5. API ENDPOINTS (Berikan daftar ini ke temanmu)
 $routes->group('api', function($routes) {
-    $routes->get('looks', 'ApiController::getAllLooks');        // URL: /api/looks
-    $routes->get('look/(:num)', 'ApiController::getLookDetail/$1'); // URL: /api/look/1
+    // Ambil semua looks
+    $routes->get('looks', 'ApiController::getAllLooks');        
+    // Ambil detail satu look berdasarkan ID
+    $routes->get('looks/(:num)', 'ApiController::getLookDetail/$1'); 
+    
+    // Simpan look ke board tertentu
+    $routes->post('boards/(:num)/looks', 'BoardController::addLook/$1');
 });

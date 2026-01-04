@@ -9,7 +9,7 @@ class Setup extends Controller
     public function index()
     {
         $db = \Config\Database::connect();
-        $forge = \Config\Database::forge();
+        $db->query('DROP TABLE IF EXISTS looks');
 
         // $forge->dropTable('pins', true);
         // $forge->dropTable('looks', true);

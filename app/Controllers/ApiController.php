@@ -7,7 +7,7 @@ use CodeIgniter\Controller;
 class ApiController extends Controller
 {
     // API untuk mengambil semua data OOTD
-    public function getAllPins()
+    public function getAllLooks()
     {
         $db = \Config\Database::connect();
         $pins = $db->table('pins')->get()->getResultArray();
@@ -24,7 +24,7 @@ class ApiController extends Controller
     }
 
     // API untuk mengambil 1 data spesifik berdasarkan ID
-    public function getPinDetail($id)
+    public function getLookDetail($id)
     {
         $db = \Config\Database::connect();
         $pin = $db->table('pins')->where('id', $id)->get()->getRowArray();

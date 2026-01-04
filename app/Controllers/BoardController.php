@@ -27,7 +27,7 @@ class BoardController extends ResourceController
         return $this->respond($this->model->findAll());
     }
     // Endpoint 4: Add Pin to Board (POST /boards/{boardId}/pins)
-    public function addPin($boardId = null)
+    public function addLook($boardId = null)
     {
         $pinModel = new \App\Models\PinModel();
         $data = $this->request->getJSON(true);
@@ -81,7 +81,7 @@ class BoardController extends ResourceController
     }
 
     // Endpoint 6: Filter Pins by Tag + Category (untuk Feed Explore)
-    public function searchPins()
+    public function searchLooks()
     {
         $pinModel = new \App\Models\PinModel();
         $tag = $this->request->getVar('tags');
