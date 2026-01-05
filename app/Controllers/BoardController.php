@@ -127,37 +127,37 @@ class BoardController extends ResourceController
     // Endpoint 8: Quick Save (POST /api/quick-save)
     // Endpoint: Quick Save (POST /api/quick-save)
     public function quickSave()
-{
-    $json = $this->request->getJSON(true);
-    $userId = $json['user_id'];
-    $look = $json['look_data'];
+    {
+        $json = $this->request->getJSON(true);
+        $userId = $json['user_id'];
+        $look = $json['look_data'];
 
-    $db = \Config\Database::connect();
+        $db = \Config\Database::connect();
 
-    // 1. Cari atau buat board default
-    $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
-    if (!$board) {
-        $db->table('boards')->insert(['user_id' => $userId, 'name' => 'My Saves']);
-        $boardId = $db->insertID();
-    } else {
-        $boardId = $board['id'];
+        // 1. Ambil atau Buat Board My Saves
+        $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
+        if (!$board) {
+            $db->table('boards')->insert(['user_id' => $userId, 'name' => 'My Saves', 'category' => 'General']);
+            $boardId = $db->insertID();
+        } else {
+            $boardId = $board['id'];
+        }
+
+        // 2. Siapkan data untuk tabel pins
+        $dataToInsert = [
+            'board_id'     => $boardId,
+            'title'        => $look['title'] ?? 'Untitled',
+            'description'  => $look['description'] ?? 'No description',
+            'image_url'    => $look['image_url'] ?? '',
+            'user'         => $look['user'] ?? 'unknown',
+            'item_details' => is_array($look['item_details']) ? json_encode($look['item_details']) : ($look['item_details'] ?? null),
+            'tags'         => is_array($look['tags']) ? json_encode($look['tags']) : ($look['tags'] ?? null),
+            'category'     => $look['category'] ?? 'General'
+        ];
+
+        if ($db->table('pins')->insert($dataToInsert)) {
+            return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
+        }
+        return $this->fail('Gagal menyimpan ke database.');
     }
-
-    // 2. Simpan data LENGKAP ke tabel PINS
-    $dataToInsert = [
-        'board_id'     => $boardId,
-        'title'        => $look['title'] ?? 'Untitled',
-        'description'  => $look['description'] ?? 'No description',
-        'image_url'    => $look['image_url'] ?? '',
-        'user'         => $look['user'] ?? 'unknown',
-        'item_details' => is_array($look['item_details']) ? json_encode($look['item_details']) : ($look['item_details'] ?? null),
-        'tags'         => is_array($look['tags']) ? json_encode($look['tags']) : ($look['tags'] ?? null),
-        'category'     => $look['category'] ?? 'General'
-    ];
-
-    if ($db->table('pins')->insert($dataToInsert)) {
-        return $this->respondCreated(['status' => 'success']);
-    }
-    return $this->fail('Gagal simpan.');
-}
 }
