@@ -99,14 +99,11 @@ class BoardController extends ResourceController
         return $this->respond($data);
     }
 
-    // --- TAMBAHAN UNTUK HALAMAN PROFILE ---
     // Endpoint 7: Get All Pins for Profile (GET /api/my-saved/{userId})
     public function getSaved($userId = null)
     {
         $pinModel = new \App\Models\PinModel();
         
-        // Mengambil semua pin yang disimpan oleh user tersebut
-        // Kita gunakan join ke tabel boards jika user_id ada di tabel boards
         $builder = $pinModel->builder();
         $builder->select('pins.*');
         $builder->join('boards', 'boards.id = pins.board_id');
@@ -118,5 +115,41 @@ class BoardController extends ResourceController
             'status' => 'success',
             'data'   => $data
         ]);
+    }
+
+    // --- TAMBAHAN BARU UNTUK FITUR SIMPAN OTOMATIS ---
+    // Endpoint 8: Quick Save (POST /api/quick-save)
+    public function quickSave()
+    {
+        $json = $this->request->getJSON(true);
+        $userId = $json['user_id'];
+        $lookData = $json['look_data'];
+
+        $db = \Config\Database::connect();
+
+        // Cari atau buat board default "My Saves" untuk user ini
+        $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
+
+        if (!$board) {
+            $db->table('boards')->insert([
+                'user_id' => $userId,
+                'name'    => 'My Saves',
+                'category' => 'General'
+            ]);
+            $boardId = $db->insertID();
+        } else {
+            $boardId = $board['id'];
+        }
+
+        $pinModel = new \App\Models\PinModel();
+        $lookData['board_id'] = $boardId;
+        
+        if(isset($lookData['tags'])) $lookData['tags'] = json_encode($lookData['tags']);
+        if(isset($lookData['products'])) $lookData['products'] = json_encode($lookData['products']);
+
+        if ($pinModel->insert($lookData)) {
+            return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
+        }
+        return $this->fail('Gagal menyimpan.');
     }
 }
