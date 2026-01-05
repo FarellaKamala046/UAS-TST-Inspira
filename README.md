@@ -6,7 +6,7 @@
 ### 1. Deskripsi Proyek
 **Inspira** adalah layanan mikro galeri fashion OOTD yang menyediakan data katalog pakaian, manajemen pengguna, dan penyimpanan koleksi papan (board). Sistem ini dirancang untuk memudahkan pengguna mencari inspirasi gaya pakaian secara publik dan menyimpan favorit mereka ke koleksi pribadi.
 
-* **URL Layanan:** https://inspira_container.otwdochub.my.id/
+* **URL Layanan:** https://inspira-container.otwdochub.my.id/
 ---
 
 ### 2. Arsitektur & Infrastruktur
