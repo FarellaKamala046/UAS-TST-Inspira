@@ -34,8 +34,7 @@ class BoardController extends ResourceController
         $data = $this->request->getJSON(true);
         $data['board_id'] = $boardId; // Hubungkan pin dengan ID board-nya
 
-        // Karena tags dan products itu bentuknya array di JSON, 
-        // kita ubah jadi string agar bisa masuk ke database SQLite
+
         if(isset($data['tags'])) $data['tags'] = json_encode($data['tags']);
         if(isset($data['products'])) $data['products'] = json_encode($data['products']);
 
@@ -123,9 +122,8 @@ class BoardController extends ResourceController
     }
     return $this->fail('Gagal menghapus pin');
     }
-    // --- TAMBAHAN BARU UNTUK FITUR SIMPAN OTOMATIS ---
+
     // Endpoint 8: Quick Save (POST /api/quick-save)
-    // Endpoint: Quick Save (POST /api/quick-save)
     public function quickSave()
     {
         $json = $this->request->getJSON(true);
@@ -143,7 +141,7 @@ class BoardController extends ResourceController
             $boardId = $board['id'];
         }
 
-        // 2. Siapkan data untuk tabel PINS (Pastikan kolom sesuai Setup.php)
+        // 2. Siapkan data untuk tabel PINS
         $dataToInsert = [
             'board_id'     => $boardId,
             'title'        => $look['title'] ?? 'Untitled',
@@ -151,12 +149,10 @@ class BoardController extends ResourceController
             'image_url'    => $look['image_url'] ?? '',
             'user'         => $look['user'] ?? 'anonymous',
             'category'     => $look['category'] ?? 'General',
-            // PENTING: Ubah Array menjadi String JSON agar tersimpan sempurna di SQLite
             'item_details' => is_array($look['item_details']) ? json_encode($look['item_details']) : ($look['item_details'] ?? null),
             'tags'         => is_array($look['tags']) ? json_encode($look['tags']) : ($look['tags'] ?? null)
         ];
 
-        // Gunakan query builder langsung untuk menghindari batasan $allowedFields di model
         if ($db->table('pins')->insert($dataToInsert)) {
             return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
         }

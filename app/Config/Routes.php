@@ -33,8 +33,7 @@ $routes->group('api', function($routes) {
 
     // --- BOARDS (Interaction) ---
     $routes->post('boards/(:num)/looks', 'BoardController::addLook/$1', ['filter' => 'auth']);
-    
-    // TAMBAHAN: Route untuk simpan cepat tanpa buat board manual
+
     $routes->post('quick-save', 'BoardController::quickSave'); 
     $routes->delete('pins/(:num)', 'BoardController::deletePin/$1');
     // --- PROFILE INTERACTION ---

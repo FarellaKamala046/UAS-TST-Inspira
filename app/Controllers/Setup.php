@@ -44,9 +44,6 @@ $db->query("CREATE TABLE IF NOT EXISTS saved_looks (
             title TEXT,
             description TEXT,
             pins INTEGER DEFAULT 0,
-            
-            /* item_details menyimpan JSON berisi beberapa jenis pakaian.
-               Masing-masing pakaianpunya tags dalam bentuk List/Array */
             item_details TEXT,
             shopee_link TEXT,
             visibility TEXT DEFAULT "public"
@@ -56,7 +53,7 @@ $db->query("CREATE TABLE IF NOT EXISTS saved_looks (
             username TEXT UNIQUE,
             email TEXT UNIQUE,
             password TEXT,
-            token TEXT, -- Kode rahasia login disimpan di sini
+            token TEXT, 
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )');
         $db->query('CREATE TABLE boards (

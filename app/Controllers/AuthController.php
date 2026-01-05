@@ -41,7 +41,7 @@ class AuthController extends Controller {
             return $this->response->setJSON([
                 'status' => 'success',
                 'token'  => $token, 
-                'id'     => $user['id'], // TAMBAHAN: Penting untuk fitur Profile & Save!
+                'id'     => $user['id'],
                 'user'   => $user['username']
             ]);
         }
@@ -49,7 +49,6 @@ class AuthController extends Controller {
         return $this->response->setJSON(['status' => 'error', 'message' => 'Login Gagal'])->setStatusCode(401);
     }
 
-    // TAMBAHAN: Logout untuk hapus token
     public function logout() {
         $db = \Config\Database::connect();
         $token = $this->request->getHeaderLine('Authorization');

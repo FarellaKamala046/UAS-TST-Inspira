@@ -13,7 +13,7 @@
             --accent-pink: #ff4d8d;
             --accent-light: #ffebf2;
             --text-dark: #2d3436;
-            --shadow-premium: 0 20px 40px rgba(255, 77, 141, 0.08); /* Soft shadow pink tipis */
+            --shadow-premium: 0 20px 40px rgba(255, 77, 141, 0.08); 
         }
 
         body {
@@ -29,7 +29,7 @@
 
         .main-card {
             background: white;
-            border-radius: 40px; /* Sudut sangat membulat agar modern */
+            border-radius: 40px;
             border: 1px solid rgba(255, 77, 141, 0.1);
             box-shadow: var(--shadow-premium);
             padding: 50px;
@@ -39,7 +39,6 @@
             overflow: hidden;
         }
 
-        /* Hiasan lingkaran di background agar tidak sepi */
         .main-card::before {
             content: "";
             position: absolute;
@@ -72,7 +71,6 @@
             margin-bottom: 30px;
         }
 
-        /* List Step Modern */
         .step-container {
             display: flex;
             flex-direction: column;
