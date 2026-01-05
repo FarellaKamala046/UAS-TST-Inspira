@@ -37,7 +37,6 @@ abstract class BaseController extends Controller
         // $this->helpers = ['form', 'url'];
 
         // Caution: Do not edit this line.
-        parent::initController($request, $response, $logger);
 
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -46,6 +45,8 @@ abstract class BaseController extends Controller
         if ($this->request->getMethod() === 'options') {
         exit; 
         }
+
+        parent::initController($request, $response, $logger);
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
     }
