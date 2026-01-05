@@ -26,6 +26,7 @@ class BoardController extends ResourceController
     {
         return $this->respond($this->model->findAll());
     }
+
     // Endpoint 3: Add Pin to Board (POST /boards/{boardId}/pins)
     public function addLook($boardId = null)
     {
@@ -96,5 +97,26 @@ class BoardController extends ResourceController
 
         $data = $builder->get()->getResult();
         return $this->respond($data);
+    }
+
+    // --- TAMBAHAN UNTUK HALAMAN PROFILE ---
+    // Endpoint 7: Get All Pins for Profile (GET /api/my-saved/{userId})
+    public function getSaved($userId = null)
+    {
+        $pinModel = new \App\Models\PinModel();
+        
+        // Mengambil semua pin yang disimpan oleh user tersebut
+        // Kita gunakan join ke tabel boards jika user_id ada di tabel boards
+        $builder = $pinModel->builder();
+        $builder->select('pins.*');
+        $builder->join('boards', 'boards.id = pins.board_id');
+        $builder->where('boards.user_id', $userId);
+        
+        $data = $builder->get()->getResult();
+
+        return $this->respond([
+            'status' => 'success',
+            'data'   => $data
+        ]);
     }
 }
