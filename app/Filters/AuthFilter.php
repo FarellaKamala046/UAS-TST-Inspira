@@ -6,6 +6,13 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class AuthFilter implements FilterInterface {
     public function before(RequestInterface $request, $arguments = null) {
+        
+        // --- TAMBAHAN: Izinkan request OPTIONS (CORS) agar tidak error ---
+        if ($request->getMethod() === 'options') {
+            return;
+        }
+        // ----------------------------------------------------------------
+
         $db = \Config\Database::connect();
         // Ambil token dari Header 'Authorization'
         $token = $request->getServer('HTTP_AUTHORIZATION');
