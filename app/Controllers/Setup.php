@@ -74,7 +74,7 @@ $db->query("CREATE TABLE IF NOT EXISTS saved_looks (
         description TEXT,
         image_url TEXT,
         user TEXT,
-        item_details TEXT, -- TAMBAHAN PENTING
+        item_details TEXT, 
         tags TEXT,
         category TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP

@@ -125,35 +125,39 @@ class BoardController extends ResourceController
     }
     // --- TAMBAHAN BARU UNTUK FITUR SIMPAN OTOMATIS ---
     // Endpoint 8: Quick Save (POST /api/quick-save)
+    // Endpoint: Quick Save (POST /api/quick-save)
     public function quickSave()
-{
-    $json = $this->request->getJSON(true);
-    $userId = $json['user_id'];
-    $lookData = $json['look_data']; // Ini kiriman dari frontend
+    {
+        $json = $this->request->getJSON(true);
+        $userId = $json['user_id'];
+        $lookData = $json['look_data'];
 
-    $db = \Config\Database::connect();
+        $db = \Config\Database::connect();
 
-    // 1. Cari/Buat Board
-    $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
-    if (!$board) {
-        $db->table('boards')->insert(['user_id' => $userId, 'name' => 'My Saves', 'category' => 'General']);
-        $boardId = $db->insertID();
-    } else {
-        $boardId = $board['id'];
+        // 1. Cari atau buat board default "My Saves"
+        $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
+
+        if (!$board) {
+            $db->table('boards')->insert([
+                'user_id' => $userId,
+                'name'    => 'My Saves',
+                'category' => 'General'
+            ]);
+            $boardId = $db->insertID();
+        } else {
+            $boardId = $board['id'];
+        }
+
+        $pinModel = new \App\Models\PinModel();
+        $lookData['board_id'] = $boardId;
+        
+        // PENTING: Ubah Array menjadi String JSON agar tersimpan sempurna di SQLite
+        if(isset($lookData['tags'])) $lookData['tags'] = json_encode($lookData['tags']);
+        if(isset($lookData['item_details'])) $lookData['item_details'] = json_encode($lookData['item_details']);
+
+        if ($pinModel->insert($lookData)) {
+            return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
+        }
+        return $this->fail('Gagal menyimpan.');
     }
-
-    // 2. Pastikan item_details ikut disimpan sebagai string JSON
-    $pinModel = new \App\Models\PinModel();
-    $lookData['board_id'] = $boardId;
-    
-    // Pastikan item_details diserialisasi jika berbentuk array
-    if(isset($lookData['item_details']) && is_array($lookData['item_details'])) {
-        $lookData['item_details'] = json_encode($lookData['item_details']);
-    }
-
-    if ($pinModel->insert($lookData)) {
-        return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
-    }
-    return $this->fail('Gagal menyimpan.');
-}
 }
