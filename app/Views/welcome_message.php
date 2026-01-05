@@ -147,7 +147,7 @@
         <h1>Inspira OOTD System</h1>
         <div class="status-badge">● Microservice Online - v1.1</div>
         
-        <p class="text-muted">Gunakan panduan di bawah ini untuk menguji layanan API secara mandiri:</p>
+        <p class="text-muted">Berikut merupakan panduan untuk menguji layanan API dari Inspira:</p>
 
         <div class="step-container">
             <a href="/api/looks" class="step-card" target="_blank">
