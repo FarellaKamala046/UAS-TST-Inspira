@@ -43,6 +43,9 @@ abstract class BaseController extends Controller
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, Authorization");
 
+        if ($this->request->getMethod() === 'options') {
+        exit; 
+        }
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
     }
