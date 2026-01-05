@@ -62,17 +62,22 @@ $db->query("CREATE TABLE IF NOT EXISTS saved_looks (
         $db->query('CREATE TABLE boards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
-        title TEXT,
-        description TEXT,
-        visibility TEXT DEFAULT "public"
+        name TEXT,
+        category TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )');
 
     $db->query('CREATE TABLE pins (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         board_id INTEGER,
-        look_id INTEGER,
+        title TEXT,
+        description TEXT,
+        image_url TEXT,
+        user TEXT,
+        tags TEXT,
+        category TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )');
+        )');
         
          
         return "✅ Database di-reset! Struktur item_details dengan multiple tags sudah siap.";
