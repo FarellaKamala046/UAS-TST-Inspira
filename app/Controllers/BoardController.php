@@ -125,35 +125,41 @@ class BoardController extends ResourceController
     }
     // --- TAMBAHAN BARU UNTUK FITUR SIMPAN OTOMATIS ---
     // Endpoint 8: Quick Save (POST /api/quick-save)
+    // Endpoint: Quick Save (POST /api/quick-save)
     public function quickSave()
-{
-    $json = $this->request->getJSON(true);
-    $userId = $json['user_id'];
-    $lookData = $json['look_data']; // Ini kiriman dari frontend
+    {
+        $json = $this->request->getJSON(true);
+        $userId = $json['user_id'];
+        $look = $json['look_data'];
 
-    $db = \Config\Database::connect();
+        $db = \Config\Database::connect();
 
-    // 1. Cari/Buat Board
-    $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
-    if (!$board) {
-        $db->table('boards')->insert(['user_id' => $userId, 'name' => 'My Saves', 'category' => 'General']);
-        $boardId = $db->insertID();
-    } else {
-        $boardId = $board['id'];
+        // 1. Cari atau buat board default "My Saves"
+        $board = $db->table('boards')->where(['user_id' => $userId, 'name' => 'My Saves'])->get()->getRowArray();
+        if (!$board) {
+            $db->table('boards')->insert(['user_id' => $userId, 'name' => 'My Saves', 'category' => 'General']);
+            $boardId = $db->insertID();
+        } else {
+            $boardId = $board['id'];
+        }
+
+        // 2. Siapkan data untuk tabel PINS (Pastikan kolom sesuai Setup.php)
+        $dataToInsert = [
+            'board_id'     => $boardId,
+            'title'        => $look['title'] ?? 'Untitled',
+            'description'  => $look['description'] ?? '', 
+            'image_url'    => $look['image_url'] ?? '',
+            'user'         => $look['user'] ?? 'anonymous',
+            'category'     => $look['category'] ?? 'General',
+            // PENTING: Ubah Array menjadi String JSON agar tersimpan sempurna di SQLite
+            'item_details' => is_array($look['item_details']) ? json_encode($look['item_details']) : ($look['item_details'] ?? null),
+            'tags'         => is_array($look['tags']) ? json_encode($look['tags']) : ($look['tags'] ?? null)
+        ];
+
+        // Gunakan query builder langsung untuk menghindari batasan $allowedFields di model
+        if ($db->table('pins')->insert($dataToInsert)) {
+            return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
+        }
+        return $this->fail('Gagal menyimpan ke database.');
     }
-
-    // 2. Pastikan item_details ikut disimpan sebagai string JSON
-    $pinModel = new \App\Models\PinModel();
-    $lookData['board_id'] = $boardId;
-    
-    // Pastikan item_details diserialisasi jika berbentuk array
-    if(isset($lookData['item_details']) && is_array($lookData['item_details'])) {
-        $lookData['item_details'] = json_encode($lookData['item_details']);
-    }
-
-    if ($pinModel->insert($lookData)) {
-        return $this->respondCreated(['status' => 'success', 'message' => 'Berhasil disimpan!']);
-    }
-    return $this->fail('Gagal menyimpan.');
-}
 }
