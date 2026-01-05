@@ -42,9 +42,12 @@ abstract class BaseController extends Controller
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, Authorization");
 
-        if ($this->request->getMethod() === 'options') {
-        exit; 
+        // Ganti $this->request menjadi $request saja
+        if ($request->getMethod() === 'options') {
+            exit; 
         }
+        
+        
 
         parent::initController($request, $response, $logger);
         // Preload any models, libraries, etc, here.
