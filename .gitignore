@@ -1,3 +1,5 @@
 /vendor
 /writable/*.sqlite
 .env
+.env.swp
+*.swp
