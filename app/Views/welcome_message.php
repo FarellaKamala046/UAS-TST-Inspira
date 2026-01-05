@@ -55,7 +55,7 @@
         h1 {
             font-weight: 800;
             font-size: 2.8rem;
-            background: linear-gradient(to right, #c62828, #ff4d8d);
+            background: linear-gradient(to right, #9e2f90, #ff4d8d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
@@ -176,7 +176,7 @@
         </div>
 
         <div class="footer-text">
-            Developed on STB Armbian with Docker Isolation | UAS TST 2025
+            Developed on STB Armbian with Docker Isolation | UAS TST 2025 | Farella Kamala B |
         </div>
     </div>
 </div>
