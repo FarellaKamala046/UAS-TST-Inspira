@@ -9,6 +9,25 @@ class Setup extends Controller
     public function index()
     {
         $db = \Config\Database::connect();
+
+// Tabel User
+$db->query("CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    email TEXT UNIQUE,
+    password TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)");
+
+// Tabel Simpan Pin
+$db->query("CREATE TABLE IF NOT EXISTS saved_looks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    look_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, look_id)
+)");
+        $db = \Config\Database::connect();
         $db->query('DROP TABLE IF EXISTS users');
         $db->query('DROP TABLE IF EXISTS looks');
         $db->query('DROP TABLE IF EXISTS boards');

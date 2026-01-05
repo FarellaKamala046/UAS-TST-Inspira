@@ -7,6 +7,7 @@ class AuthController extends Controller {
     // REGISTER: Simpan user baru
     public function register() {
         $db = \Config\Database::connect();
+        // Mengambil data dari form-post
         $username = $this->request->getPost('username');
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
@@ -40,10 +41,22 @@ class AuthController extends Controller {
             return $this->response->setJSON([
                 'status' => 'success',
                 'token'  => $token, 
+                'id'     => $user['id'], // TAMBAHAN: Penting untuk fitur Profile & Save!
                 'user'   => $user['username']
             ]);
         }
 
         return $this->response->setJSON(['status' => 'error', 'message' => 'Login Gagal'])->setStatusCode(401);
+    }
+
+    // TAMBAHAN: Logout untuk hapus token
+    public function logout() {
+        $db = \Config\Database::connect();
+        $token = $this->request->getHeaderLine('Authorization');
+        
+        if ($token) {
+            $db->table('users')->where('token', $token)->update(['token' => null]);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Berhasil Logout']);
+        }
     }
 }

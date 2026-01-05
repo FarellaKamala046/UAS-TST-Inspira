@@ -21,6 +21,7 @@ $routes->group('api', function($routes) {
     // --- AUTHENTICATION ---
     $routes->post('register', 'AuthController::register');
     $routes->post('login', 'AuthController::login');
+    $routes->get('logout', 'AuthController::logout'); // TAMBAHAN: Agar user bisa keluar dengan aman
 
     // --- LOOKS (OOTD) - Public ---
     $routes->get('looks', 'ApiController::getAllLooks');
@@ -33,4 +34,8 @@ $routes->group('api', function($routes) {
     // --- BOARDS (Interaction) - Protected (Wajib Login) ---
     // Sekarang hanya ada SATU rute dan sudah ditempel filter 'auth'
     $routes->post('boards/(:num)/looks', 'BoardController::addLook/$1', ['filter' => 'auth']);
+
+    // --- PROFILE INTERACTION ---
+    // TAMBAHAN: Untuk menampilkan daftar foto yang sudah di-save user di profile.html
+    $routes->get('my-saved/(:num)', 'BoardController::getSaved/$1'); 
 });
