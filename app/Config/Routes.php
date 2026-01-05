@@ -36,7 +36,7 @@ $routes->group('api', function($routes) {
     
     // TAMBAHAN: Route untuk simpan cepat tanpa buat board manual
     $routes->post('quick-save', 'BoardController::quickSave'); 
-
+    $routes->delete('pins/(:num)', 'BoardController::deletePin/$1');
     // --- PROFILE INTERACTION ---
     $routes->get('my-saved/(:num)', 'BoardController::getSaved/$1'); 
 });

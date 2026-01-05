@@ -116,7 +116,13 @@ class BoardController extends ResourceController
             'data'   => $data
         ]);
     }
-
+    public function deletePin($id = null) {
+    $pinModel = new \App\Models\PinModel();
+    if ($pinModel->delete($id)) {
+        return $this->respondDeleted(['status' => 'success', 'message' => 'Pin berhasil dihapus']);
+    }
+    return $this->fail('Gagal menghapus pin');
+    }
     // --- TAMBAHAN BARU UNTUK FITUR SIMPAN OTOMATIS ---
     // Endpoint 8: Quick Save (POST /api/quick-save)
     public function quickSave()
